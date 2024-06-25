@@ -9,19 +9,21 @@ import java.net.http.HttpResponse;
 public class ConsumoAPI {
 
     public String obterDados(String endereco) {
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(endereco))
                 .build();
         HttpResponse<String> response = null;
-        try {
+        try{
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+        }catch (IOException|InterruptedException e){
             throw new RuntimeException(e);
         }
 
-        String json = response.body();
+        var json = response.body();
         return json;
     }
 }
